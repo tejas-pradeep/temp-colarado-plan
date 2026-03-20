@@ -29,14 +29,19 @@ export function parseTime(timeStr, dayIndex) {
   return dateBase;
 }
 
-export function getCountdownInfo(now, dayIndex, items, dayOrders) {
+export function getCountdownInfo(now, dayIndex, items, dayOrders, dayTimeSlots) {
   const ordered = dayOrders[dayIndex];
+  const timeSlots = dayTimeSlots ? dayTimeSlots[dayIndex] : null;
   const parsed = ordered
-    .map((origIdx) => ({
-      origIdx,
-      item: items[origIdx],
-      startTime: parseTime(items[origIdx].time, dayIndex),
-    }))
+    .map((origIdx, displayPos) => {
+      // Use time slot (position-based) if available, otherwise fall back to item time
+      const timeStr = timeSlots ? (timeSlots[displayPos] || items[origIdx].time) : items[origIdx].time;
+      return {
+        origIdx,
+        item: items[origIdx],
+        startTime: parseTime(timeStr, dayIndex),
+      };
+    })
     .filter((p) => p.startTime !== null);
 
   parsed.sort((a, b) => a.startTime - b.startTime);

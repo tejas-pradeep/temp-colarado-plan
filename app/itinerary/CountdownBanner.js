@@ -5,12 +5,13 @@ export default function CountdownBanner({
   dayIndex,
   items,
   dayOrders,
+  dayTimeSlots,
   accent,
   color,
 }) {
   if (!now) return null;
 
-  const { current, next } = getCountdownInfo(now, dayIndex, items, dayOrders);
+  const { current, next } = getCountdownInfo(now, dayIndex, items, dayOrders, dayTimeSlots);
 
   if (!current && !next) return null;
 
