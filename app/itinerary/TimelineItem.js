@@ -153,7 +153,7 @@ export default function TimelineItem({
                   }}
                   title="Move up"
                 >
-                  \u25B2
+                  {"\u25B2"}
                 </button>
               )}
               {displayPos < totalItems - 1 && (
@@ -175,7 +175,7 @@ export default function TimelineItem({
                   }}
                   title="Move down"
                 >
-                  \u25BC
+                  {"\u25BC"}
                 </button>
               )}
               <button
@@ -245,7 +245,7 @@ export default function TimelineItem({
                 fontWeight: 600,
               }}
             >
-              \uD83D\uDCCD View on Maps
+              {"\uD83D\uDCCD"} View on Maps
             </a>
           )}
         </div>
