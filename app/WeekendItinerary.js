@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { DAYS, tagColors } from "./itinerary/data";
+import { parseTime } from "./itinerary/utils";
 import CountdownBanner from "./itinerary/CountdownBanner";
 import TimelineItem from "./itinerary/TimelineItem";
 
@@ -78,6 +79,22 @@ export default function WeekendItinerary() {
       travelMode: null,
     };
 
+    // Find the correct display position based on time
+    const newParsed = parseTime(newCard.time, activeDay);
+    const currentSlots = dayTimeSlots[activeDay];
+    let insertPos = currentSlots.length; // default: end
+    if (newParsed) {
+      for (let i = 0; i < currentSlots.length; i++) {
+        const slotParsed = parseTime(currentSlots[i], activeDay);
+        if (slotParsed && newParsed < slotParsed) {
+          insertPos = i;
+          break;
+        }
+      }
+    }
+
+    const newIdx = dayItems[activeDay].length;
+
     setDayItems((prev) => {
       const next = prev.map((arr) => [...arr]);
       next[activeDay] = [...next[activeDay], newItem];
@@ -86,14 +103,17 @@ export default function WeekendItinerary() {
 
     setDayOrders((prev) => {
       const next = prev.map((arr) => [...arr]);
-      const newIdx = dayItems[activeDay].length;
-      next[activeDay] = [...next[activeDay], newIdx];
+      const updated = [...next[activeDay]];
+      updated.splice(insertPos, 0, newIdx);
+      next[activeDay] = updated;
       return next;
     });
 
     setDayTimeSlots((prev) => {
       const next = prev.map((arr) => [...arr]);
-      next[activeDay] = [...next[activeDay], newCard.time];
+      const updated = [...next[activeDay]];
+      updated.splice(insertPos, 0, newCard.time);
+      next[activeDay] = updated;
       return next;
     });
 
