@@ -3,6 +3,7 @@ import TravelIndicator from "./TravelIndicator";
 
 export default function TimelineItem({
   item,
+  displayTime,
   origIdx,
   displayPos,
   totalItems,
@@ -109,7 +110,7 @@ export default function TimelineItem({
                 minWidth: "fit-content",
               }}
             >
-              {item.time}
+              {displayTime || item.time}
             </span>
             <span
               style={{

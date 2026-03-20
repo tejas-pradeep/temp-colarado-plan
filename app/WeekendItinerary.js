@@ -1,17 +1,38 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { DAYS } from "./itinerary/data";
+import { DAYS, tagColors } from "./itinerary/data";
 import CountdownBanner from "./itinerary/CountdownBanner";
 import TimelineItem from "./itinerary/TimelineItem";
 
+const TAG_OPTIONS = Object.keys(tagColors);
+
 export default function WeekendItinerary() {
   const [activeDay, setActiveDay] = useState(0);
+  // Mutable items per day (allows adding new cards)
+  const [dayItems, setDayItems] = useState(
+    DAYS.map((d) => d.items.map((item) => ({ ...item })))
+  );
   const [dayOrders, setDayOrders] = useState(
     DAYS.map((d) => d.items.map((_, i) => i))
   );
+  // Time slots track the displayed time at each display position
+  const [dayTimeSlots, setDayTimeSlots] = useState(
+    DAYS.map((d) => d.items.map((item) => item.time))
+  );
   const [cancelled, setCancelled] = useState(new Set());
   const [now, setNow] = useState(null);
+
+  // Add card form state
+  const [showAddForm, setShowAddForm] = useState(false);
+  const [newCard, setNewCard] = useState({
+    time: "",
+    title: "",
+    desc: "",
+    tag: "ACTIVITY",
+    icon: "",
+    mapQuery: "",
+  });
 
   useEffect(() => {
     setNow(new Date());
@@ -31,7 +52,9 @@ export default function WeekendItinerary() {
   };
 
   const moveItem = (fromPos, toPos) => {
-    if (toPos < 0 || toPos >= DAYS[activeDay].items.length) return;
+    const items = dayItems[activeDay];
+    if (toPos < 0 || toPos >= items.length) return;
+    // Swap items in the order array, but time slots stay in place
     setDayOrders((prev) => {
       const next = prev.map((arr) => [...arr]);
       const temp = next[activeDay][fromPos];
@@ -41,7 +64,46 @@ export default function WeekendItinerary() {
     });
   };
 
+  const addCard = () => {
+    if (!newCard.time.trim() || !newCard.title.trim()) return;
+
+    const newItem = {
+      time: newCard.time,
+      title: newCard.title,
+      desc: newCard.desc,
+      tag: newCard.tag,
+      icon: newCard.icon || "📌",
+      mapQuery: newCard.mapQuery || null,
+      travelTime: null,
+      travelMode: null,
+    };
+
+    setDayItems((prev) => {
+      const next = prev.map((arr) => [...arr]);
+      next[activeDay] = [...next[activeDay], newItem];
+      return next;
+    });
+
+    setDayOrders((prev) => {
+      const next = prev.map((arr) => [...arr]);
+      const newIdx = dayItems[activeDay].length;
+      next[activeDay] = [...next[activeDay], newIdx];
+      return next;
+    });
+
+    setDayTimeSlots((prev) => {
+      const next = prev.map((arr) => [...arr]);
+      next[activeDay] = [...next[activeDay], newCard.time];
+      return next;
+    });
+
+    setNewCard({ time: "", title: "", desc: "", tag: "ACTIVITY", icon: "", mapQuery: "" });
+    setShowAddForm(false);
+  };
+
   const currentOrder = dayOrders[activeDay];
+  const currentItems = dayItems[activeDay];
+  const currentTimeSlots = dayTimeSlots[activeDay];
 
   return (
     <div
@@ -98,7 +160,7 @@ export default function WeekendItinerary() {
         {DAYS.map((d, i) => (
           <button
             key={i}
-            onClick={() => setActiveDay(i)}
+            onClick={() => { setActiveDay(i); setShowAddForm(false); }}
             style={{
               flex: 1,
               padding: "10px 8px 12px",
@@ -177,8 +239,9 @@ export default function WeekendItinerary() {
       <CountdownBanner
         now={now}
         dayIndex={activeDay}
-        items={day.items}
+        items={currentItems}
         dayOrders={dayOrders}
+        dayTimeSlots={dayTimeSlots}
         accent={day.accent}
         color={day.color}
       />
@@ -186,17 +249,20 @@ export default function WeekendItinerary() {
       {/* Timeline */}
       <div style={{ position: "relative" }}>
         {currentOrder.map((origIdx, displayPos) => {
-          const item = day.items[origIdx];
+          const item = currentItems[origIdx];
           const itemKey = `${activeDay}-${origIdx}`;
           const isCancelled = cancelled.has(itemKey);
           const nextOrigIdx = currentOrder[displayPos + 1];
           const nextItem =
-            nextOrigIdx != null ? day.items[nextOrigIdx] : null;
+            nextOrigIdx != null ? currentItems[nextOrigIdx] : null;
+          // Use the time slot for this display position, not the item's original time
+          const displayTime = currentTimeSlots[displayPos] || item.time;
 
           return (
             <TimelineItem
-              key={origIdx}
+              key={`${activeDay}-${origIdx}`}
               item={item}
+              displayTime={displayTime}
               origIdx={origIdx}
               displayPos={displayPos}
               totalItems={currentOrder.length}
@@ -210,6 +276,179 @@ export default function WeekendItinerary() {
             />
           );
         })}
+      </div>
+
+      {/* Add Card Button / Form */}
+      <div style={{ marginTop: 8, marginBottom: 24 }}>
+        {!showAddForm ? (
+          <button
+            onClick={() => setShowAddForm(true)}
+            style={{
+              width: "100%",
+              padding: "12px 16px",
+              border: `2px dashed ${day.accent}44`,
+              background: `${day.accent}06`,
+              borderRadius: 10,
+              cursor: "pointer",
+              fontSize: 14,
+              fontWeight: 600,
+              color: day.accent,
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              gap: 8,
+              transition: "all 0.2s",
+            }}
+          >
+            + Add Activity
+          </button>
+        ) : (
+          <div
+            style={{
+              border: `1px solid ${day.accent}33`,
+              borderRadius: 10,
+              padding: 16,
+              background: `${day.accent}06`,
+            }}
+          >
+            <div style={{ fontSize: 14, fontWeight: 700, marginBottom: 12, color: day.color }}>
+              New Activity
+            </div>
+            <div style={{ display: "flex", gap: 8, marginBottom: 8 }}>
+              <input
+                type="text"
+                placeholder="Time (e.g. 3:00 PM)"
+                value={newCard.time}
+                onChange={(e) => setNewCard({ ...newCard, time: e.target.value })}
+                style={{
+                  flex: 1,
+                  padding: "8px 10px",
+                  border: "1px solid #ddd",
+                  borderRadius: 6,
+                  fontSize: 13,
+                  outline: "none",
+                }}
+              />
+              <input
+                type="text"
+                placeholder="Icon emoji"
+                value={newCard.icon}
+                onChange={(e) => setNewCard({ ...newCard, icon: e.target.value })}
+                style={{
+                  width: 60,
+                  padding: "8px 10px",
+                  border: "1px solid #ddd",
+                  borderRadius: 6,
+                  fontSize: 13,
+                  textAlign: "center",
+                  outline: "none",
+                }}
+              />
+            </div>
+            <input
+              type="text"
+              placeholder="Title"
+              value={newCard.title}
+              onChange={(e) => setNewCard({ ...newCard, title: e.target.value })}
+              style={{
+                width: "100%",
+                padding: "8px 10px",
+                border: "1px solid #ddd",
+                borderRadius: 6,
+                fontSize: 13,
+                marginBottom: 8,
+                boxSizing: "border-box",
+                outline: "none",
+              }}
+            />
+            <textarea
+              placeholder="Description (optional)"
+              value={newCard.desc}
+              onChange={(e) => setNewCard({ ...newCard, desc: e.target.value })}
+              rows={2}
+              style={{
+                width: "100%",
+                padding: "8px 10px",
+                border: "1px solid #ddd",
+                borderRadius: 6,
+                fontSize: 13,
+                marginBottom: 8,
+                boxSizing: "border-box",
+                resize: "vertical",
+                fontFamily: "inherit",
+                outline: "none",
+              }}
+            />
+            <div style={{ display: "flex", gap: 8, marginBottom: 12 }}>
+              <select
+                value={newCard.tag}
+                onChange={(e) => setNewCard({ ...newCard, tag: e.target.value })}
+                style={{
+                  flex: 1,
+                  padding: "8px 10px",
+                  border: "1px solid #ddd",
+                  borderRadius: 6,
+                  fontSize: 13,
+                  background: "white",
+                  outline: "none",
+                }}
+              >
+                {TAG_OPTIONS.map((tag) => (
+                  <option key={tag} value={tag}>{tag}</option>
+                ))}
+              </select>
+              <input
+                type="text"
+                placeholder="Map location (optional)"
+                value={newCard.mapQuery}
+                onChange={(e) => setNewCard({ ...newCard, mapQuery: e.target.value })}
+                style={{
+                  flex: 2,
+                  padding: "8px 10px",
+                  border: "1px solid #ddd",
+                  borderRadius: 6,
+                  fontSize: 13,
+                  outline: "none",
+                }}
+              />
+            </div>
+            <div style={{ display: "flex", gap: 8, justifyContent: "flex-end" }}>
+              <button
+                onClick={() => {
+                  setShowAddForm(false);
+                  setNewCard({ time: "", title: "", desc: "", tag: "ACTIVITY", icon: "", mapQuery: "" });
+                }}
+                style={{
+                  padding: "8px 16px",
+                  border: "1px solid #ddd",
+                  background: "white",
+                  borderRadius: 6,
+                  fontSize: 13,
+                  cursor: "pointer",
+                  color: "#666",
+                }}
+              >
+                Cancel
+              </button>
+              <button
+                onClick={addCard}
+                disabled={!newCard.time.trim() || !newCard.title.trim()}
+                style={{
+                  padding: "8px 16px",
+                  border: "none",
+                  background: newCard.time.trim() && newCard.title.trim() ? day.accent : "#ccc",
+                  color: "white",
+                  borderRadius: 6,
+                  fontSize: 13,
+                  fontWeight: 600,
+                  cursor: newCard.time.trim() && newCard.title.trim() ? "pointer" : "not-allowed",
+                }}
+              >
+                Add
+              </button>
+            </div>
+          </div>
+        )}
       </div>
 
       {/* Footer tips */}
