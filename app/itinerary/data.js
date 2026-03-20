@@ -10,9 +10,9 @@ export const DAYS = [
       "Covers River Run Gondola sightseeing access + 20% off on-mountain dining via Epic Mountain Rewards",
     items: [
       {
-        time: "8:00 AM",
+        time: "8:15 AM",
         title: "Ride with Friends to Keystone",
-        desc: "Catch a ride with your friends from the Airbnb. Breckenridge \u2192 Keystone is only ~20 min. Arrive by 8:20 AM and get settled while they hit the slopes.",
+        desc: "Catch a ride with your friends from the Airbnb in Frisco. Frisco \u2192 Keystone is only ~15 min. Arrive by 8:30 AM and get settled while they hit the slopes.",
         tag: "DRIVE",
         icon: "\uD83D\uDE97",
         mapQuery: "Keystone Resort, Keystone, CO",
@@ -102,7 +102,7 @@ export const DAYS = [
       {
         time: "7:30 \u2013 10:00 PM",
         title: "Winter Comedy Series @ Warren Station",
-        desc: "Comedy Works Denver brings the laughs to Keystone. Great warm-up night before the big Saturday. Tickets required. Ride back to the Airbnb with your friends after (~20 min).",
+        desc: "Comedy Works Denver brings the laughs to Keystone. Great warm-up night before the big Saturday. Tickets required. Ride back to the Airbnb in Frisco with your friends after (~15 min).",
         tag: "EVENT",
         icon: "\uD83C\uDF64",
         mapQuery: "Warren Station Center, Keystone, CO",
@@ -122,9 +122,9 @@ export const DAYS = [
       "Covers Gondola One foot-passenger access (saves ~$65\u201375 sightseeing ticket) + 20% off on-mountain dining",
     items: [
       {
-        time: "7:45 AM",
+        time: "8:15 AM",
         title: "Ride with Friends to Vail",
-        desc: "Catch a ride with your friends. Breckenridge \u2192 Vail is ~45 min via I-70 West. Leave early to arrive by 8:30 AM.",
+        desc: "Catch a ride with your friends from the Airbnb in Frisco. Frisco \u2192 Vail is ~35 min via I-70 West. Arrive around 8:50 AM.",
         tag: "DRIVE",
         icon: "\uD83D\uDE97",
         mapQuery: "Vail Village, Vail, CO",
@@ -132,7 +132,7 @@ export const DAYS = [
         travelMode: null,
       },
       {
-        time: "8:30 \u2013 10:00 AM",
+        time: "9:00 \u2013 10:30 AM",
         title: "Gondola One \u2192 Breakfast at The 10th",
         desc: "Use your Epic Pass to ride Gondola One up to Mid-Vail. Have a leisurely breakfast/brunch at The 10th \u2014 upscale mountain cuisine, craft cocktails, Gore Range views. Open to non-skiers. The DJ on the back patio has been playing select weekends this season too.",
         tag: "FOOD",
@@ -142,9 +142,9 @@ export const DAYS = [
         travelMode: "walk",
       },
       {
-        time: "~10:00 AM",
+        time: "~10:30 AM",
         title: "\uD83E\uDD1D Meetup #1 \u2014 The 10th, Mid-Vail",
-        desc: "Have your friends ski to Mid-Vail (top of Gondola One) and join you for a mid-morning break at The 10th around 10. It\u2019s a natural midpoint on the mountain \u2014 blue/black skiers pass through here constantly. Share a drink with mountain views, then they head back out and you ride down to the village.",
+        desc: "Have your friends ski to Mid-Vail (top of Gondola One) and join you for a mid-morning break at The 10th around 10:30. It\u2019s a natural midpoint on the mountain \u2014 blue/black skiers pass through here constantly. Share a drink with mountain views, then they head back out and you ride down to the village.",
         tag: "MEETUP",
         icon: "\uD83E\uDD1D",
         mapQuery: "The 10th Restaurant, Vail, CO",
@@ -152,7 +152,7 @@ export const DAYS = [
         travelMode: null,
       },
       {
-        time: "10:30 \u2013 12:00 PM",
+        time: "11:00 AM \u2013 12:30 PM",
         title: "Explore Vail Village",
         desc: "Walk the pedestrian village. Window shop, coffee, or grab a drink at Pepi\u2019s Bar (classic Austrian apr\u00e8s vibe since the 1960s). Then head over to Avanti at Golden Peak to get a good spot before it fills up.",
         tag: "EXPLORE",
@@ -204,7 +204,7 @@ export const DAYS = [
       {
         time: "9:00 PM \u2013 Late",
         title: "Late Night in Vail Village",
-        desc: "Chasing Rabbits \u2014 underground cocktail bar with DJs, arcade games, and likely an EO afterparty. Shakedown Bar \u2014 live music, cheap drinks, always packed. Bridge Street Bar \u2014 the dance floor spot. Ride back to Breck with your friends or grab a rideshare (~45 min).",
+        desc: "Chasing Rabbits \u2014 underground cocktail bar with DJs, arcade games, and likely an EO afterparty. Shakedown Bar \u2014 live music, cheap drinks, always packed. Bridge Street Bar \u2014 the dance floor spot. Ride back to Frisco with your friends or grab a rideshare (~35 min).",
         tag: "NIGHTLIFE",
         icon: "\uD83C\uDF19",
         mapQuery: "Chasing Rabbits, Vail, CO",
@@ -224,9 +224,9 @@ export const DAYS = [
       "BreckConnect Gondola is FREE for everyone \u2014 no ticket or pass required. Save your passes for Fri & Sat.",
     items: [
       {
-        time: "8:00 AM",
+        time: "8:15 AM",
         title: "Ride with Friends to Breck",
-        desc: "Catch a ride with your friends to the resort. You\u2019re already near Breck at your Airbnb \u2014 short trip to the base area.",
+        desc: "Catch a ride with your friends from the Airbnb in Frisco. Frisco \u2192 Breckenridge is only ~15 min. Arrive by 8:30 AM.",
         tag: "DRIVE",
         icon: "\uD83D\uDE97",
         mapQuery: "Breckenridge, CO",
@@ -296,7 +296,7 @@ export const DAYS = [
       {
         time: "5:00 PM+",
         title: "Back to the Airbnb",
-        desc: "Short trip back to your Airbnb with your friends. Hot tub, takeout, relive the weekend. Legendary three days in the books.",
+        desc: "Short trip back to your Airbnb in Frisco with your friends. Hot tub, takeout, relive the weekend. Legendary three days in the books.",
         tag: "CHILL",
         icon: "\uD83C\uDFE0",
         mapQuery: null,
